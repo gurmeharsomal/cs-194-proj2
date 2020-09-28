@@ -1,0 +1,704 @@
+
+<html>
+<head>
+<style>
+  body {
+    padding: 100px;
+    width: 1000px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+    background-color: #fcf7e9;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+</style>
+
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+</head>
+
+<body>
+
+<h1 align="middle">CS 194-26: Fall 2020</h1>
+<h1 align="middle">Project 2: Fun with Filters and Frequencies</h1>
+<h2 align="middle">Gurmehar Kaur Somal </h2>
+
+<br><br>
+
+<div>
+<h2 >Introduction</h2>
+  <p> The goal of this project was to understand different ways of using filters and frequencies on certain images and create some awesome stuff.</p>
+
+<h2 align="middle">Part 1.1: Finite Difference Operator</h2>
+
+  <p>I convolved the cameraman image with d_x = [[1, -1], [0,0]] and d_y = d_x.T to get the partial derivatives of the image. Then
+    I computed the gradient magnitude image by calculating the square root of the sum of the squares of the partial
+      derivatives. Then I used Thresholding to only keeping pixels that were greater than a certain threshold (in this case, it was 0.13). This is how I created the binarized image of all the edges. The image, however,
+       is slightly noisy, especially at the bottom.</p>
+  <div align="center">
+    <table style="width=100%">
+      <tr>
+        <td align="middle">
+          <img src="cameraman.png" width="290" />
+          <figcaption align="middle">Original Image</figcaption>
+        </td>
+        <td align="middle">
+          <img src="grad_mad_1.1.png" width="290" />
+          <figcaption align="middle">Gradient Magnitude Image</figcaption>
+        </td>
+        <td align="middle">
+          <img src="binarized_1.1.png" width="290" />
+          <figcaption align="middle">Edge Image</figcaption>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+<h2 align="middle">Part 1.2: Derivative of Gaussian (DoG) Filter</h2>
+
+    <p> First way: I created a blurred version of the original image by convolving with a gaussian and repeated the procedure in the previous part. Then I moved on to find its edges by convolving the image with a 2D Gaussian kernel and got the gradient magnitude image. Then I used thresholding to binarize that image by only taking gradient magnitude pixel values that were greater than 0.016. The edges for this part were better then part 1.1 as we applied the gaussian and then got the edges. <br>
+      Second way: I found the Derivative of Gaussian on x axis (dx) and y axis (dy), and then applied them to the original unblurred image using convolution. As convolutions are commutative and associative we can either convolve our blurred image with our filters, or convolve the gaussian filters with the above filters before computing the gradient magnitude, both provided the same result. </p>
+    <div align="center">
+      <table style="width=100%">
+        <tr>
+          <td align="middle">
+            <img src="1.2_first_way.jpg" width="380" />
+            <figcaption align="middle">Edges of Gaussian Blurred Image</figcaption>
+          </td>
+          <td align="middle">
+            <img src="1.2_second_way.jpg" width="380" />
+            <figcaption align="middle">Edges of Gaussian Filter to Unblurred Image</figcaption>
+          </td>
+        </tr>
+      </table>
+      <table style="width=100%">
+        <tr>
+          <td align="middle">
+            <img src="1.2_gasx.jpg" width="280" />
+            <figcaption align="middle">DoG d_x Filter </figcaption>
+          </td>
+          <td align="middle">
+            <img src="1.2_gasy.jpg" width="280" />
+            <figcaption align="middle">DoG d_y Filter</figcaption>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <p> The binarized image for the first way is also displayed here:</p>
+    <div align="center">
+      <table style="width=100%">
+        <tr>
+          <td align="middle">
+            <img src="1.3_binarized.png" width="390" />
+            <figcaption align="middle">Edges of Binarized Image</figcaption>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+<h2 align="middle">Part 1.3: Image Straightening</h2>
+
+    <div align="center">
+      <h3 align="middle">Facade</h2>
+      <table style="width=100%">
+        <tr>
+          <td align="middle">
+            <img src="facade.jpg" width="450" />
+            <figcaption align="middle">Original Image</figcaption>
+          </td>
+          <td align="middle">
+            <img src="strait_facade.png" width="450px" />
+            <figcaption align="middle">Straightened Image</figcaption>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">
+            <img src="facade_hist.png" width="400px" />
+            <figcaption align="middle">Original Gradient Histogram</figcaption>
+          </td>
+          <td align="middle">
+            <img src="hist_strait.png" width="400px" />
+            <figcaption align="middle">Straightened Gradient Histogram</figcaption>
+          </td>
+        </tr>
+      </table>
+      <h3 align="middle">Leaning Tower of Pisa</h2>
+      <table style="width=100%">
+        <tr>
+          <td align="middle">
+            <img src="pisa.jpg" width="400px" />
+            <figcaption align="middle">Original Image</figcaption>
+          </td>
+          <td align="middle">
+            <img src="straight_pisa.png" width="400px" />
+            <figcaption align="middle">Straightened Image</figcaption>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">
+            <img src="not_strait_pisa.png" width="400px" />
+            <figcaption align="middle">Original Gradient Angles</figcaption>
+          </td>
+          <td align="middle">
+            <img src="pisa_strait_hist.png" width="400px" />
+            <figcaption align="middle">Straightened Gradient Angles</figcaption>
+          </td>
+        </tr>
+      </table>
+      <h3 align="middle">Skyline</h2>
+      <table style="width=100%">
+        <tr>
+          <td align="middle">
+            <img src="building_rotated.jpg" width="450px" />
+            <figcaption align="middle">Original Image</figcaption>
+          </td>
+          <td align="middle">
+            <img src="straight_buiding.png" width="420px" />
+            <figcaption align="middle">Straightened Image</figcaption>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">
+            <img src="bad_skyline_hist.png" width="400px" />
+            <figcaption align="middle">Original Gradient Angles</figcaption>
+          </td>
+          <td align="middle">
+            <img src="skyline_hist.png" width="400px" />
+            <figcaption align="middle">Straightened Gradient Angles</figcaption>
+          </td>
+        </tr>
+      </table>
+      <h3 align="middle">Curvy Building (Failure Case)</h2>
+      <p align='left'> Here, the straightening function failed to straighten the image because the image contains a lot curved edges that are hard to straighten. </p>
+      <table style="width=100%">
+        <tr>
+          <td align="middle">
+            <img src="curved.jpg" width="450px" />
+            <figcaption align="middle">Original Image</figcaption>
+          </td>
+          <td align="middle">
+            <img src="curved_straight.png" width="450px" />
+            <figcaption align="middle">Straightened Image</figcaption>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">
+            <img src="curved_hist.png" width="400px" />
+            <figcaption align="middle">Original Gradient Angles</figcaption>
+          </td>
+          <td align="middle">
+            <img src="curved_hist.png" width="400px" />
+            <figcaption align="middle">Straightened Gradient Angles</figcaption>
+          </td>
+        </tr>
+      </table>
+      
+    </div>
+
+<h2 align="middle">Part 2.1: Image "Sharpening"</h2>
+
+    <div align="center">
+      <h3 align="middle">Taj Mahal</h2>
+      <table style="width=100%">
+        <tr>
+          <td align="middle">
+            <img src="taj.jpg" width="400px" />
+            <figcaption align="middle">Original Image</figcaption>
+          </td>
+          <td align="middle">
+            <img src="taj_sharp.png" width="400px" />
+            <figcaption align="middle">"Sharpened" Image</figcaption>
+          </td>
+        </tr>
+      </table>
+      <h3 align="middle">Sea Turtle</h2>
+      <table style="width=100%">
+        <tr>
+          <td align="middle">
+            <img src="turtle.jpg" width="400px" />
+            <figcaption align="middle">Original </figcaption>
+          </td>
+          <td align="middle">
+            <img src="sharp_tturtle.png" width="400px" />
+            <figcaption align="middle">"Sharpened" </figcaption>
+          </td>
+        </tr>
+      </table>
+      <h3 align="middle">Moon</h2>
+      <table style="width=100%">
+        <tr>
+          <td align="middle">
+            <img src="mars.png" width="440px" />
+            <figcaption align="middle">Original </figcaption>
+          </td>
+          <td align="middle">
+            <img src="sharp_moon.png" width="440px" />
+            <figcaption align="middle">"Sharpened" </figcaption>
+          </td>
+        </tr>
+      </table>
+      <table style="width=100%">
+        <h3 align="middle">Jimmy Nelson Photography</h2>
+        <p align="left"> This example entails using an already sharp image of an indegenoud women, blurring it with a low-pass filter and then sharpening it again by subtracting the blurred image from the original image. As shown, the new image does look more sharp but makes it look too noisy. </p>
+        <tr>
+          <td align="middle">
+            <img src="jimmy_nelson.jpg" width="300px" />
+            <figcaption align="middle">Original </figcaption>
+          </td>
+          <td align="middle">
+            <img src="blur_jimmy.png" width="300px" />
+            <figcaption align="middle">Blurred </figcaption>
+          </td>
+          <td align="middle">
+            <img src="sharp_jimmy.png" width="300" />
+            <figcaption align="middle">Resharpened </figcaption>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+<h2 align="middle">Part 2.2: Hybrid Images with Bells and Whistles</h2>
+    <p> I created these hybrid images by aligning them
+        based on the postion of the eyes, and then adding the high frequency image of one to the
+        low frequency image of the other. These hybrid images were created after adding color by auto contrasting from the beginning. </p>
+    <div align="center">
+      <table style="width=100%">
+          <h3 align="middle">Derek and Nutmeg</h2>
+          <tr>
+            <td align="middle">
+              <img src="DerekPicture.jpg" width="250px" />
+            </td>
+            <td align="middle">
+              <img src="nutmeg.jpg" width="300px" />
+            </td>
+            <td align="middle">
+              <img src="hybrid_derek.png" width="300" />
+            </td>
+          </tr>
+        </table>
+        <table style="width=100%">
+          <h3 align="middle">Derek and Nutmeg with Auto Contrasting</h2>
+            <p>The images below are produced after using an auto contrasting function. As displayed, the first image is too bright and the effect we are supposed to get after creating a hybrid isn't as prominent. However, the second image, where I use auto contrasting only on the high frequency image (nutmeg), is achieveing that effect perfectly and provides better color overall. I think enhancing the color on the high resolution image is giving a better affect than before. </p>
+          <tr>
+            <td align="middle">
+              <img src="contrasted_bad.png" width="300px" />
+              <figcaption align="middle"> Auto Contrasting on both images </figcaption>
+            </td>
+            <td align="middle">
+              <img src="contrast_better.png" width="300px" />
+              <figcaption align="middle">Auto Contrasting only on High Frequency image</figcaption>
+          </tr>
+        </table>
+
+
+        <table style="width=100%">
+          <h3 align="middle">Renegade and Renaissance</h2>
+          <tr>
+            <td align="middle">
+              <img src="michelle.jpg" width="260px" />
+            </td>
+            <td align="middle">
+              <img src="barack.jpg" width="300px" />
+            </td>
+            <td align="middle">
+              <img src="hybrid_mich_barack.png" width="300" />
+            </td>
+          </tr>
+        </table>
+                <table style="width=100%">
+          <h3 align="middle">Brad in a Lion's Pitt</h3>
+            <p align="left"> I found the log magnitude of
+              the Fourier transform for two input images, the filtered images, and the hybrid image.</p>
+          <tr>
+            <td align="middle">
+              <img src="lion.jpg" width="350px" />
+            </td>
+            <td align="middle">
+              <img src="brad.jpg" width="250px" />
+            </td>
+          </tr>
+          <tr>
+            <td align="middle">
+              <img src="im1_ft.png" width="300px" />
+            </td>
+            <td align="middle">
+              <img src="im2_ft.png" width="300px" />
+            </td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <td align="middle">
+              <img src="high_res1.png" width="330px" />
+            </td>
+            <td align="middle">
+              <img src="low_res2.png" width="330px" />
+            </td>
+          </tr>
+          <tr>
+            <td align="middle">
+              <img src="high_res_ft.png" width="330px" />
+            </td>
+            <td align="middle">
+              <img src="low_res_ft.png" width="330px" />
+            </td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <td align="middle">
+              <img src="hybrid_lion.png" width="330" />
+            </td>
+          </tr>
+          <tr>
+            <td align="middle">
+              <img src="hybrid_ft.png" width="330" />
+            </td>
+          </tr>
+          
+
+
+        </table>
+
+        <table style="width=100%">
+          <h3 align="middle">Butterfly and the Rose</h2>
+          <p align="left"> This is the hybrid image that was a failure case as shapes of the rose and butterfy don't match very well. Therefore, it is hard to align them.</p>
+          <tr>
+            <td align="middle">
+              <img src="rose.jpeg" width="250px" />
+            </td>
+            <td align="middle">
+              <img src="butterfly.jpg" width="300px" />
+            </td>
+            <td align="middle">
+              <img src="butter_rose.png" width="300" />
+            </td>
+          </tr>
+        </table>
+      </div>
+
+<h2 align="middle">Part 2.3: Gaussian and Laplacian Stacks</h2>
+  <p> As mentioned in the project spec, I created a Gaussian and Laplacian stack by taking a normal image and iterating
+      through 5 levels without downsampling it and applying Gaussian and Laplacian (original image - Gaussian blur image) filter of sigma = [2,4,8,16,32] to the image. </p>
+  <div align="center">
+      <table style="width=100%">
+        <h3 align="middle">Lincoln</h2>
+        <tr>
+          <td align="middle">
+            <img src="lincoln.jpg" width="180" />
+            <figcaption align="middle">Original Image</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_lin_0.png" width="180" />
+            <figcaption align="middle">Level 1</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_lin_1.png" width="180" />
+            <figcaption align="middle">Level 2</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_lin_2.png" width="180" />
+            <figcaption align="middle">Level 3</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_lin_3.png" width="180" />
+            <figcaption align="middle">Level 4</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_lin_4.png" width="180" />
+            <figcaption align="middle">Level 5</figcaption>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">
+            <img src="lincoln.jpg" width="180" />
+            <figcaption align="middle">Original Image</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_lin_0.png" width="180" />
+            <figcaption align="middle">Level 1</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_lin_1.png" width="180" />
+            <figcaption align="middle">Level 2</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_lin_2.png" width="180" />
+            <figcaption align="middle">Level 3</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_lin_3.png" width="180" />
+            <figcaption align="middle">Level 4</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_lin_4.png" width="180" />
+            <figcaption align="middle">Level 5</figcaption>
+          </td>
+        </tr>
+      </table>
+      <table style="width=100%">
+        <h3 align="middle">The Starry Night</h2>
+          <tr>
+          <td align="middle">
+            <img src="starry.jpg" width="180" />
+            <figcaption align="middle">Original Image</figcaption>
+          </td>
+          </td>
+          <td align="middle">
+            <img src="gas_star_0.png" width="180" />
+            <figcaption align="middle">Level 1</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_star_1.png" width="180" />
+            <figcaption align="middle">Level 2</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_star_2.png" width="180" />
+            <figcaption align="middle">Level 3</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_star_3.png" width="180" />
+            <figcaption align="middle">Level 4</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_star_4.png" width="180" />
+            <figcaption align="middle">Level 5</figcaption>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">
+            <img src="starry.jpg" width="180" />
+            <figcaption align="middle">Original Image</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_star_0.png" width="180" />
+            <figcaption align="middle">Level 1</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_star_1.png" width="180" />
+            <figcaption align="middle">Level 2</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_star_2.png" width="180" />
+            <figcaption align="middle">Level 3</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_star_3.png" width="180" />
+            <figcaption align="middle">Level 4</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_star_4.png" width="180" />
+            <figcaption align="middle">Level 5</figcaption>
+        </tr>
+      </table>
+      <table style="width=100%">
+        <h3 align="middle">Hybrid Image</h2>
+          <tr>
+          <td align="middle">
+            <img src="hybrid_lion.png" width="180" />
+            <figcaption align="middle">Original Image</figcaption>
+          </td>
+          </td>
+          <td align="middle">
+            <img src="gas_0lion.jpg" width="180" />
+            <figcaption align="middle">Level 1</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_1lion.jpg" width="180" />
+            <figcaption align="middle">Level 2</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_2lion.jpg" width="180" />
+            <figcaption align="middle">Level 3</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_3lion.jpg" width="180" />
+            <figcaption align="middle">Level 4</figcaption>
+          </td>
+          <td align="middle">
+            <img src="gas_4lion.jpg" width="180" />
+            <figcaption align="middle">Level 5</figcaption>
+          </td>
+        </tr>
+        <tr>
+          <td align="middle">
+            <img src="hybrid_lion.png" width="180" />
+            <figcaption align="middle">Original Image</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_0lion.jpg" width="180" />
+            <figcaption align="middle">Level 1</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_1lion.jpg" width="180" />
+            <figcaption align="middle">Level 2</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_2lion.jpg" width="180" />
+            <figcaption align="middle">Level 3</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_3lion.jpg" width="180" />
+            <figcaption align="middle">Level 4</figcaption>
+          </td>
+          <td align="middle">
+            <img src="lap_4lion.jpg" width="180" />
+            <figcaption align="middle">Level 5</figcaption>
+        </tr>
+      </table>
+    </div>
+<h2 align="middle">Part 2.4: Multiresolution Blending</h2>
+    <p> I used the techniques shown in Burt and Adelson's 1983 paper on
+        Multiresolution Spline to create a function that leverages 
+        Gaussian and Laplacian stacks. This function takes in 2 images and outputs the blended image (by summing the Laplacian stacks and adding the last gaussian stack to it). </p>
+    
+    <div align="center">
+        <table style="width=100%">
+          <h3 align="middle">Orapple</h2>
+          <tr>
+            <td align="middle">
+              <img src="apple.jpg" width="250" />
+            </td>
+            <td align="middle">
+              <img src="orange.jpg" width="250" />
+            </td>
+            <td align="middle">
+              <img src="orapple.png" width="250" />
+            </td>
+            <td align="middle">
+              <img src="mask_orapple.png" width="240" />
+              <figcaption align="middle">Mask</figcaption>
+            </td>
+          </tr>
+        </table>
+        <table style="width=100%">
+          <h3 align="middle">Orapple with Bells and Whistles</h2>
+            <p> The images shown below are generated after using auto contrasting on the apple, orange and both respectively. 
+            As shown, the color enhancing effect doesn't really make the images better and explodes their colors a lot. Therefore, I think color enhancing isn't the best option for this part.  </p>
+          <tr>
+            <td align="middle">
+              <img src="contrast_apple.png" width="250" />
+              <figcaption align="middle">Auto contrasting on apple </figcaption>
+            </td>
+            <td align="middle">
+              <img src="contrast_orange.png" width="250" />
+              <figcaption align="middle">Auto contrasting on orange </figcaption>
+            </td>
+
+            <td align="middle">
+              <img src="orapple_bad.png" width="250" />
+              <figcaption align="middle">Auto contrasting on both images</figcaption>
+            </td>
+          </tr>
+        </table>
+        <table style="width=100%">
+          <h3 align="middle">Joaq-ker</h2>
+          <tr>
+            <td align="middle">
+              <img src="jph.jpeg" width="270" />
+            </td>
+            <td align="middle">
+              <img src="joker2.jpg" width="330px" />
+            </td>
+            <td align="middle">
+              <img src="joker_mask.png" width="330px" />
+            </td>
+            <td align="middle">
+              <img src="mask_orapple.png" width="230" />
+              <figcaption align="middle">Mask</figcaption>
+            </td>
+          </tr>
+        </table>
+        <table style="width=100%">
+          <p align="left"> The following images are showing a Laplacian stack for the joker
+              blended image and its input images after the mask was applied.</p>
+              <tr>
+                  </td>
+                  <td align="middle">
+                    <img src="lap_im1.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="lap_im1_1.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="lap_im1_2.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="lap_im1_3.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="lap_im1_4.jpg" width="200" />
+                  </td>
+              </tr>
+              <tr>
+                  </td>
+                  <td align="middle">
+                    <img src="lap_im2_0.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="lap_im2_1.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="lap_im2_2.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="lap_im2_3.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="lap_im2_4.jpg" width="200" />
+                  </td>
+              </tr>
+              <tr>
+                  </td>
+                  <td align="middle">
+                    <img src="comb_im0.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="comb_im1.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="comb_im2.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="comb_im3.jpg" width="200" />
+                  </td>
+                  <td align="middle">
+                    <img src="comb_im4.jpg" width="200" />
+                  </td>
+              </tr>
+        </table>
+        <table style="width=100%">
+          <h3 align="middle">Earth and Moon</h2>
+          <p align="left"> Here I use an irregular mask in the shape of a circle inorder to blend the 2 images of the Earth and Moon together.</p>
+              <tr>
+                <td align="middle">
+                  <img src="earth.jpg" width="250" />
+                  <figcaption align="middle">Earth</figcaption>
+                </td>
+                <td align="middle">
+                  <img src="mars.png" width="290" />
+                  <figcaption align="middle">Moon</figcaption>
+                </td>
+                <td align="middle">
+                  <img src="hybrid_2.png" width="280" />
+                  <figcaption align="middle">Blend</figcaption>
+                </td>
+                <td align="middle">
+                  <img src="mask_earth.png" width="280" />
+                  <figcaption align="middle">Mask</figcaption>
+                </td>
+              </tr>
+        </table>
+      </div>
+      <h3 align="middle">Key Takeaways</h2>
+          <p align="left">The most interesting part about this project was learning how everything comes together at the end after estimating derivative to using gaussian blur technique and then to creating amazing masked/blended images. </p>
+        <h3 align="left"> Credit for the Website Template: Charley Huang.</h2>
+
+</div>
+</body>
+</html>
